@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `chacha20_poly1305_aead` crate.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, chacha20_poly1305_aead">
+
+    <title>chacha20_poly1305_aead - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'></p><script>window.sidebarCurrent = {name: 'chacha20_poly1305_aead', ty: 'mod', relpath: '../'};</script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content mod">
+<h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>chacha20_poly1305_aead</a></span><span class='out-of-band'><span id='render-detail'>
+            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                [<span class='inner'>&#x2212;</span>]
+            </a>
+        </span><a id='src-0' class='srclink' href='../src/chacha20_poly1305_aead/lib.rs.html#8-60' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>A pure Rust implementation of the ChaCha20-Poly1305 AEAD from RFC 7539.</p>
+
+<p>An Authenticated Encryption with Associated Data (AEAD) mode
+encrypts data and generates an authentication tag, or decrypts data
+and verifies an authentication tag, as a single operation. The tag
+can also validate additional authenticated data (AAD) which is not
+included in the cyphertext, for instance a plaintext header.</p>
+
+<p>The ChaCha20-Poly1305 AEAD uses a 256-bit (32-byte) key, and a
+96-bit (12-byte) nonce. For each key, a given nonce should be used
+only once, otherwise the encryption and authentication can be
+broken. One way to prevent reuse is for the nonce to contain a
+sequence number.</p>
+
+<p>The amount of data that can be encrypted in a single call is 2<sup>32</sup> - 1
+blocks of 64 bytes, slightly less than 256 GiB.</p>
+</div><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
+<table>
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.DecryptError.html'
+                               title='chacha20_poly1305_aead::DecryptError'>DecryptError</a></td>
+                        <td class='docblock short'>
+                             <p>Error returned from the <code>decrypt</code> function.</p>
+
+                        </td>
+                    </tr>
+                </table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+<table>
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.decrypt.html'
+                               title='chacha20_poly1305_aead::decrypt'>decrypt</a></td>
+                        <td class='docblock short'>
+                             <p>Verifies the authentication tag and decrypts a byte slice.</p>
+
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.encrypt.html'
+                               title='chacha20_poly1305_aead::encrypt'>encrypt</a></td>
+                        <td class='docblock short'>
+                             <p>Encrypts a byte slice and returns the authentication tag.</p>
+
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.encrypt_read.html'
+                               title='chacha20_poly1305_aead::encrypt_read'>encrypt_read</a></td>
+                        <td class='docblock short'>
+                             <p>Encrypts bytes from a reader and returns the authentication tag.</p>
+
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.selftest.html'
+                               title='chacha20_poly1305_aead::selftest'>selftest</a></td>
+                        <td class='docblock short'>
+                             <p>Runs the self-test for ChaCha20, Poly1305, and the AEAD.</p>
+
+                        </td>
+                    </tr>
+                </table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "chacha20_poly1305_aead";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script defer src="../search-index.js"></script>
+</body>
+</html>
