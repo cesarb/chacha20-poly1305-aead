@@ -1,0 +1,20 @@
+[package]
+name = "chacha20-poly1305-aead"
+version = "0.1.0"
+authors = ["Cesar Eduardo Barros <cesarb@cesarb.eti.br>"]
+description = "A pure Rust implementation of the ChaCha20-Poly1305 AEAD from RFC 7539."
+repository = "https://github.com/cesarb/chacha20-poly1305-aead"
+documentation = "https://cesarb.github.io/chacha20-poly1305-aead/chacha20_poly1305_aead/"
+readme = "README.md"
+keywords = ["chacha20", "poly1305", "aead", "crypto"]
+license = "MIT OR Apache-2.0"
+
+[features]
+bench = []
+simd = []
+simd_opt = ["simd"]
+simd_asm = ["simd_opt"]
+
+[dependencies]
+constant_time_eq = "0.1.0"
+clippy = {version = "0.0.37", optional = true}
