@@ -261,49 +261,39 @@ pub mod selftest {
     pub fn selftest() {
         selftest_encrypt();
         selftest_decrypt();
+        selftest_decrypt_mismatch();
     }
 
     #[cold]
     pub fn selftest_encrypt() {
-        selftest_encrypt_noinline(KEY, NONCE, AAD, PLAINTEXT, CIPHERTEXT, TAG);
+        let mut output = Vec::with_capacity(PLAINTEXT.len());
+        let tag = encrypt(KEY, NONCE, AAD, PLAINTEXT, &mut output)
+            .expect("selftest failure");
+
+        assert_eq!(&output[..], CIPHERTEXT);
+        assert_eq!(tag, TAG);
     }
 
     #[cold]
     pub fn selftest_decrypt() {
-        selftest_decrypt_noinline(KEY, NONCE, AAD, CIPHERTEXT, TAG, PLAINTEXT)
+        let mut output = Vec::with_capacity(CIPHERTEXT.len());
+        decrypt(KEY, NONCE, AAD, CIPHERTEXT, TAG, &mut output)
             .expect("selftest failure");
 
-        let err = selftest_decrypt_noinline(KEY, NONCE, AAD, CIPHERTEXT,
-                                            &[0; 16], &[]).unwrap_err();
-        match err {
-            DecryptError::TagMismatch => {}
-            _ => panic!("selftest failure")
+        assert_eq!(&output[..], PLAINTEXT);
+    }
+
+    #[cold]
+    pub fn selftest_decrypt_mismatch() {
+        let mut output = Vec::with_capacity(0);
+        let result = decrypt(KEY, NONCE, AAD, CIPHERTEXT, &[0; 16],
+                             &mut output);
+
+        if let Err(DecryptError::TagMismatch) = result {
+            assert!(output.is_empty());
+        } else {
+            panic!("selftest failure");
         }
-    }
-
-    #[inline(never)]
-    #[cold]
-    fn selftest_encrypt_noinline(key: &[u8], nonce: &[u8],
-                                 aad: &[u8], input: &[u8],
-                                 expected: &[u8], expected_tag: &[u8]) {
-        let mut output = Vec::with_capacity(input.len());
-        let tag = encrypt(key, nonce, aad, input, &mut output)
-            .expect("selftest failure");
-
-        assert_eq!(&output[..], expected);
-        assert_eq!(tag, expected_tag);
-    }
-
-    #[inline(never)]
-    #[cold]
-    fn selftest_decrypt_noinline(key: &[u8], nonce: &[u8],
-                                 aad: &[u8], input: &[u8], tag: &[u8],
-                                 expected: &[u8]) -> Result<(), DecryptError> {
-        let mut output = Vec::with_capacity(input.len());
-        let result = decrypt(key, nonce, aad, input, tag, &mut output);
-
-        assert_eq!(&output[..], expected);
-        result
     }
 }
 
@@ -319,6 +309,11 @@ mod tests {
     #[test]
     fn selftest_decrypt() {
         selftest::selftest_decrypt();
+    }
+
+    #[test]
+    fn selftest_decrypt_mismatch() {
+        selftest::selftest_decrypt_mismatch();
     }
 
     #[test]
