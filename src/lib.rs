@@ -38,6 +38,7 @@ extern crate test;
 extern crate constant_time_eq;
 
 mod as_bytes;
+mod clone_from_slice;
 
 mod simdty;
 mod simdint;

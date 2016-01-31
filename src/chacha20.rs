@@ -6,6 +6,7 @@
 // copied, modified, or distributed except according to those terms.
 
 use as_bytes::AsBytes;
+use clone_from_slice::CompatCloneFromSlice;
 use simd::{Vector4, u32x4};
 
 #[derive(Clone, Debug)]
@@ -24,10 +25,10 @@ impl ChaCha20 {
         assert!(nonce.len() == 12);
 
         let mut k = [u32x4::default(); 2];
-        k.as_mut_bytes().clone_from_slice(key);
+        k.as_mut_bytes().compat_clone_from_slice(key);
 
         let mut n = [0; 3];
-        n.as_mut_bytes().clone_from_slice(nonce);
+        n.as_mut_bytes().compat_clone_from_slice(nonce);
 
         ChaCha20 {
             state: [
