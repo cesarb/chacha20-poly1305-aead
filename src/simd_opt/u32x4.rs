@@ -27,10 +27,10 @@ pub fn rotate_left_const(vec: u32x4, n: u32) -> u32x4 {
 
 #[inline(always)]
 fn rotate_left_any(vec: u32x4, n: u32) -> u32x4 {
-    let r = n as u32;
-    let l = 32 - r;
+    let l = n as u32;
+    let r = 32 - l;
 
-    (vec << u32x4::new(r, r, r, r)) ^ (vec >> u32x4::new(l, l, l, l))
+    (vec << u32x4::new(l, l, l, l)) ^ (vec >> u32x4::new(r, r, r, r))
 }
 
 #[cfg(feature = "simd_opt")]
