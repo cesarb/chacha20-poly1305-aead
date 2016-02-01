@@ -1,6 +1,6 @@
 [package]
 name = "chacha20-poly1305-aead"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["Cesar Eduardo Barros <cesarb@cesarb.eti.br>"]
 description = "A pure Rust implementation of the ChaCha20-Poly1305 AEAD from RFC 7539."
 repository = "https://github.com/cesarb/chacha20-poly1305-aead"
