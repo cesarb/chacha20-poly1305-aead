@@ -218,6 +218,16 @@ impl From<io::Error> for DecryptError {
     }
 }
 
+impl From<DecryptError> for io::Error {
+    fn from(error: DecryptError) -> Self {
+        match error {
+            DecryptError::IoError(e) => e,
+            DecryptError::TagMismatch =>
+                io::Error::new(ErrorKind::InvalidData, error),
+        }
+    }
+}
+
 pub mod selftest {
     use super::*;
 
