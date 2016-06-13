@@ -56,6 +56,7 @@ pub use aead::{DecryptError, decrypt, encrypt, encrypt_read};
 #[cold]
 pub fn selftest() {
     chacha20::selftest();
+    chacha20::long_counter_selftest();
     poly1305::selftest();
     aead::selftest::selftest();
 }
