@@ -16,5 +16,6 @@ simd_opt = ["simd"]
 simd_asm = ["simd_opt"]
 
 [dependencies]
+arrayref = "^0.3.3"
 constant_time_eq = "0.1.0"
 clippy = {version = "0.0.37", optional = true}

@@ -34,9 +34,7 @@ pub struct Poly1305 {
 }
 
 impl Poly1305 {
-    pub fn new(key: &[u8]) -> Self {
-        assert!(key.len() == 32);
-
+    pub fn new(key: &[u8; 32]) -> Self {
         Poly1305 {
             a: [0; 5],
 

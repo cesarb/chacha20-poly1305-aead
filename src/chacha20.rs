@@ -16,14 +16,11 @@ pub struct ChaCha20 {
 
 #[cfg_attr(feature = "clippy", allow(should_implement_trait))]
 impl ChaCha20 {
-    pub fn new(key: &[u8], nonce: &[u8]) -> Self {
+    pub fn new(key: &[u8; 32], nonce: &[u8; 12]) -> Self {
         Self::with_counter(key, nonce, 0)
     }
 
-    pub fn with_counter(key: &[u8], nonce: &[u8], counter: u32) -> Self {
-        assert!(key.len() == 32);
-        assert!(nonce.len() == 12);
-
+    pub fn with_counter(key: &[u8; 32], nonce: &[u8; 12], counter: u32) -> Self {
         let mut k = [u32x4::default(); 2];
         k.as_mut_bytes().compat_clone_from_slice(key);
 

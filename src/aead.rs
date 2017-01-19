@@ -42,7 +42,7 @@ const CHACHA20_COUNTER_OVERFLOW: u64 = ((1 << 32) - 1) * 64;
 /// assert_eq!(tag, [0xdb, 0xb7, 0x0d, 0xda, 0xbd, 0xfa, 0x8c, 0xa5,
 ///                  0x60, 0xa2, 0x30, 0x3d, 0xe6, 0x07, 0x92, 0x10]);
 /// ```
-pub fn encrypt<W: Write>(key: &[u8], nonce: &[u8],
+pub fn encrypt<W: Write>(key: &[u8; 32], nonce: &[u8; 12],
                          aad: &[u8], mut input: &[u8],
                          output: &mut W) -> io::Result<[u8; 16]> {
     encrypt_read(key, nonce, aad, &mut input, output)
@@ -53,12 +53,12 @@ pub fn encrypt<W: Write>(key: &[u8], nonce: &[u8],
 /// This function is identical to the `encrypt` function, the only
 /// difference being that its input comes from a reader instead of a
 /// byte slice.
-pub fn encrypt_read<R: Read, W: Write>(key: &[u8], nonce: &[u8],
+pub fn encrypt_read<R: Read, W: Write>(key: &[u8; 32], nonce: &[u8; 12],
                                        aad: &[u8], input: &mut R,
                                        output: &mut W) -> io::Result<[u8; 16]> {
     let mut chacha20 = ChaCha20::new(key, nonce);
-    let mut poly1305 = Poly1305::new(&chacha20.next().as_bytes()[..32]);
-
+    let block_one = chacha20.next();
+    let mut poly1305 = Poly1305::new(array_ref![block_one.as_bytes(),0,32]);
     let aad_len = aad.len() as u64;
     let mut input_len = 0;
 
@@ -124,11 +124,12 @@ pub fn encrypt_read<R: Read, W: Write>(key: &[u8], nonce: &[u8],
 /// # }
 /// # example().unwrap();
 /// ```
-pub fn decrypt<W: Write>(key: &[u8], nonce: &[u8],
+pub fn decrypt<W: Write>(key: &[u8; 32], nonce: &[u8; 12],
                          aad: &[u8], mut input: &[u8], tag: &[u8],
                          output: &mut W) -> Result<(), DecryptError> {
     let mut chacha20 = ChaCha20::new(key, nonce);
-    let mut poly1305 = Poly1305::new(&chacha20.next().as_bytes()[..32]);
+    let block_one = chacha20.next();
+    let mut poly1305 = Poly1305::new(array_ref![block_one.as_bytes(),0,32]);
 
     let aad_len = aad.len() as u64;
     let input_len = input.len() as u64;
@@ -238,13 +239,13 @@ pub mod selftest {
     static AAD: &'static [u8] = &[0x50, 0x51, 0x52, 0x53,
         0xc0, 0xc1, 0xc2, 0xc3, 0xc4, 0xc5, 0xc6, 0xc7];
 
-    static KEY: &'static [u8] = &[
+    static KEY: &'static [u8; 32] = &[
         0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87,
         0x88, 0x89, 0x8a, 0x8b, 0x8c, 0x8d, 0x8e, 0x8f,
         0x90, 0x91, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97,
         0x98, 0x99, 0x9a, 0x9b, 0x9c, 0x9d, 0x9e, 0x9f];
 
-    static NONCE: &'static [u8] = &[0x07, 0x00, 0x00, 0x00,
+    static NONCE: &'static [u8; 12] = &[0x07, 0x00, 0x00, 0x00,
         0x40, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47];
 
     static CIPHERTEXT: &'static [u8] = &[
@@ -344,7 +345,7 @@ mod tests {
         assert_eq!(&output[..], PLAINTEXT.as_bytes());
     }
 
-    static KEY: &'static [u8] = &[
+    static KEY: &'static [u8; 32] = &[
         0x1c, 0x92, 0x40, 0xa5, 0xeb, 0x55, 0xd3, 0x8a,
         0xf3, 0x33, 0x88, 0x86, 0x04, 0xf6, 0xb5, 0xf0,
         0x47, 0x39, 0x17, 0xc1, 0x40, 0x2b, 0x80, 0x09,
@@ -386,7 +387,7 @@ mod tests {
         0xa6, 0xad, 0x5c, 0xb4, 0x02, 0x2b, 0x02, 0x70,
         0x9b];
 
-    static NONCE: &'static [u8] = &[0x00, 0x00, 0x00, 0x00,
+    static NONCE: &'static [u8; 12] = &[0x00, 0x00, 0x00, 0x00,
         0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08];
 
     static AAD: &'static [u8] = &[0xf3, 0x33, 0x88, 0x86,
