@@ -35,6 +35,9 @@
 #[cfg(all(feature = "bench", test))]
 extern crate test;
 
+#[macro_use]
+extern crate arrayref;
+
 extern crate constant_time_eq;
 
 mod as_bytes;

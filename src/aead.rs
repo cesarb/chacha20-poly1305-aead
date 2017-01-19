@@ -57,8 +57,8 @@ pub fn encrypt_read<R: Read, W: Write>(key: &[u8; 32], nonce: &[u8; 12],
                                        aad: &[u8], input: &mut R,
                                        output: &mut W) -> io::Result<[u8; 16]> {
     let mut chacha20 = ChaCha20::new(key, nonce);
-    let mut poly1305 = Poly1305::new(&chacha20.next().as_bytes()[..32]);
-
+    let block_one = chacha20.next();
+    let mut poly1305 = Poly1305::new(array_ref![block_one.as_bytes(),0,32]);
     let aad_len = aad.len() as u64;
     let mut input_len = 0;
 
@@ -128,7 +128,8 @@ pub fn decrypt<W: Write>(key: &[u8; 32], nonce: &[u8; 12],
                          aad: &[u8], mut input: &[u8], tag: &[u8],
                          output: &mut W) -> Result<(), DecryptError> {
     let mut chacha20 = ChaCha20::new(key, nonce);
-    let mut poly1305 = Poly1305::new(&chacha20.next().as_bytes()[..32]);
+    let block_one = chacha20.next();
+    let mut poly1305 = Poly1305::new(array_ref![block_one.as_bytes(),0,32]);
 
     let aad_len = aad.len() as u64;
     let input_len = input.len() as u64;
