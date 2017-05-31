@@ -42,7 +42,7 @@ const CHACHA20_COUNTER_OVERFLOW: u64 = ((1 << 32) - 1) * 64;
 /// assert_eq!(tag, [0xdb, 0xb7, 0x0d, 0xda, 0xbd, 0xfa, 0x8c, 0xa5,
 ///                  0x60, 0xa2, 0x30, 0x3d, 0xe6, 0x07, 0x92, 0x10]);
 /// ```
-pub fn encrypt<W: Write>(key: &[u8], nonce: &[u8],
+pub fn encrypt<W: Write + ?Sized>(key: &[u8], nonce: &[u8],
                          aad: &[u8], mut input: &[u8],
                          output: &mut W) -> io::Result<[u8; 16]> {
     encrypt_read(key, nonce, aad, &mut input, output)
@@ -53,7 +53,7 @@ pub fn encrypt<W: Write>(key: &[u8], nonce: &[u8],
 /// This function is identical to the `encrypt` function, the only
 /// difference being that its input comes from a reader instead of a
 /// byte slice.
-pub fn encrypt_read<R: Read, W: Write>(key: &[u8], nonce: &[u8],
+pub fn encrypt_read<R: Read + ?Sized, W: Write + ?Sized>(key: &[u8], nonce: &[u8],
                                        aad: &[u8], input: &mut R,
                                        output: &mut W) -> io::Result<[u8; 16]> {
     let mut chacha20 = ChaCha20::new(key, nonce);
@@ -124,7 +124,7 @@ pub fn encrypt_read<R: Read, W: Write>(key: &[u8], nonce: &[u8],
 /// # }
 /// # example().unwrap();
 /// ```
-pub fn decrypt<W: Write>(key: &[u8], nonce: &[u8],
+pub fn decrypt<W: Write + ?Sized>(key: &[u8], nonce: &[u8],
                          aad: &[u8], mut input: &[u8], tag: &[u8],
                          output: &mut W) -> Result<(), DecryptError> {
     let mut chacha20 = ChaCha20::new(key, nonce);
@@ -164,7 +164,7 @@ pub fn decrypt<W: Write>(key: &[u8], nonce: &[u8],
     Ok(())
 }
 
-fn read_all<R: Read>(reader: &mut R, mut buf: &mut [u8]) -> io::Result<usize> {
+fn read_all<R: Read + ?Sized>(reader: &mut R, mut buf: &mut [u8]) -> io::Result<usize> {
     let mut read = 0;
     while !buf.is_empty() {
         match reader.read(buf) {
