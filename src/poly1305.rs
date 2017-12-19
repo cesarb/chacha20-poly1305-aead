@@ -21,8 +21,6 @@
 //
 // Based on the algorithm from https://github.com/floodyberry/poly1305-donna
 
-use clone_from_slice::CompatCloneFromSlice;
-
 #[derive(Clone, Debug)]
 pub struct Poly1305 {
     /// Accumulator: 5x26-bit
@@ -68,7 +66,7 @@ impl Poly1305 {
             assert!(msg.len() <= 16);
 
             let mut buf = [0; 17];
-            buf[..msg.len()].compat_clone_from_slice(msg);
+            buf[..msg.len()].clone_from_slice(msg);
             buf[msg.len()] = 1;
 
             self.accumulate(u32_from_le(&buf[ 0.. 4])      & 0x03ffffff,
@@ -84,7 +82,7 @@ impl Poly1305 {
     fn padded_block(&mut self, msg: &[u8]) {
         assert!(msg.len() <= 16);
         let mut buf = [0; 16];
-        buf[..msg.len()].compat_clone_from_slice(msg);
+        buf[..msg.len()].clone_from_slice(msg);
         self.block(&buf);
     }
 

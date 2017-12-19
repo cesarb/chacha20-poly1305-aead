@@ -11,7 +11,6 @@ use std::io::{self, ErrorKind, Read, Write};
 
 use as_bytes::AsBytes;
 use chacha20::ChaCha20;
-use clone_from_slice::CompatCloneFromSlice;
 use constant_time_eq::constant_time_eq;
 use poly1305::Poly1305;
 use simd::u32x4;
@@ -88,7 +87,7 @@ pub fn encrypt_read<R: Read, W: Write>(key: &[u8], nonce: &[u8],
     poly1305.block([aad_len.to_le(), input_len.to_le()].as_bytes());
 
     let mut tag = [0; 16];
-    tag.compat_clone_from_slice(poly1305.tag().as_bytes());
+    tag.clone_from_slice(poly1305.tag().as_bytes());
     Ok(tag)
 }
 
